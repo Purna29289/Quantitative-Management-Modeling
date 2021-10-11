@@ -1,0 +1,64 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+Loading the library
+```{r}
+library(lpSolveAPI)
+```
+Creating and lp with zero constraints and 9 variables
+```{r}
+rm(Wcorp) # free up resources and memory
+Wcorp<-make.lp(0,9)
+```
+Creating an objective function and setting it for maximization
+```{r}
+set.objfn(Wcorp,rep(c(420,360,300),3))  # Objective function with 9 decision variables
+lp.control(Wcorp,sense='max')
+```
+Adding the constraints to the problem
+```{r}
+add.constraint(Wcorp,c(1,1,1),"<=",750,indices = c(1,2,3)) 
+add.constraint(Wcorp,c(1,1,1),"<=",900,indices = c(4,5,6))
+add.constraint(Wcorp,c(1,1,1),"<=",450,indices = c(7,8,9))
+add.constraint(Wcorp,c(20,15,12),"<=",13000,indices = c(1,2,3))
+add.constraint(Wcorp,c(20,15,12),"<=",12000,indices = c(4,5,6))
+add.constraint(Wcorp,c(20,15,12),"<=",5000,indices = c(7,8,9))
+add.constraint(Wcorp,c(1,1,1),"<=",900,indices = c(1,4,7))
+add.constraint(Wcorp,c(1,1,1),"<=",1200,indices = c(2,5,8))
+add.constraint(Wcorp,c(1,1,1),"<=",750,indices = c(3,6,9))
+add.constraint(Wcorp,c(rep(c(900,-750),each=3)),"=",0,indices = c(1:6))
+add.constraint(Wcorp,c(rep(c(450,-750),each=3)),"=",0,indices = c(1,2,3,7,8,9))
+```
+```{r}
+solve(Wcorp)
+```
+```{r}
+get.objective(Wcorp)
+```
+```{r}
+get.constraints(Wcorp)
+```
+```{r}
+get.variables(Wcorp)
+```
+Reduced Cost
+```{r}
+get.sensitivity.obj(Wcorp)
+```
+Shadow Prices
+```{r}
+get.sensitivity.rhs(Wcorp)
+```
+```{r}
+Sens_1<-data.frame(get.sensitivity.rhs(Wcorp)$duals[1:11],get.sensitivity.rhs(Wcorp)$dualsfrom[1:11],get.sensitivity.rhs(Wcorp)$dualstill[1:11])
+names(Sens_1)<-c("Price","low","High")
+Sens_1
+```
+```{r}
+Sens_2<-data.frame(get.sensitivity.rhs(Wcorp)$duals[12:20],get.sensitivity.rhs(Wcorp)$dualsfrom[12:20],get.sensitivity.rhs(Wcorp)$dualstill[12:20])
+names(Sens_2)<-c("Cost","low","High")
+Sens_2
+```

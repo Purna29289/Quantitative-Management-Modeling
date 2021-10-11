@@ -1,0 +1,116 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+Loading the library
+```{r}
+library(lpSolveAPI)
+```
+#Primal Problem
+Creating an lp with zero constraints and 9 variables
+```{r}
+rm(Wcorp) # free up resources and memory
+Wcorp<-make.lp(0,9)
+```
+Creating an objective function and setting it for maximization
+```{r}
+set.objfn(Wcorp,rep(c(420,360,300),3))  # Objective function with 9 decision variables
+lp.control(Wcorp,sense='max')
+```
+Adding the constraints to the problem
+```{r}
+add.constraint(Wcorp,c(1,1,1),"<=",750,indices = c(1,2,3)) 
+add.constraint(Wcorp,c(1,1,1),"<=",900,indices = c(4,5,6))
+add.constraint(Wcorp,c(1,1,1),"<=",450,indices = c(7,8,9))
+add.constraint(Wcorp,c(20,15,12),"<=",13000,indices = c(1,2,3))
+add.constraint(Wcorp,c(20,15,12),"<=",12000,indices = c(4,5,6))
+add.constraint(Wcorp,c(20,15,12),"<=",5000,indices = c(7,8,9))
+add.constraint(Wcorp,c(1,1,1),"<=",900,indices = c(1,4,7))
+add.constraint(Wcorp,c(1,1,1),"<=",1200,indices = c(2,5,8))
+add.constraint(Wcorp,c(1,1,1),"<=",750,indices = c(3,6,9))
+add.constraint(Wcorp,c(rep(c(900,-750),each=3)),"=",0,indices = c(1:6))
+add.constraint(Wcorp,c(rep(c(450,-750),each=3)),"=",0,indices = c(1,2,3,7,8,9))
+```
+```{r}
+solve(Wcorp)
+```
+```{r}
+get.objective(Wcorp)
+```
+```{r}
+get.constraints(Wcorp)
+```
+```{r}
+get.variables(Wcorp)
+```
+Reduced Cost
+```{r}
+get.sensitivity.obj(Wcorp)
+```
+Shadow Prices
+```{r}
+get.sensitivity.rhs(Wcorp)
+```
+```{r}
+Sens_1<-data.frame(get.sensitivity.rhs(Wcorp)$duals[1:11],get.sensitivity.rhs(Wcorp)$dualsfrom[1:11],get.sensitivity.rhs(Wcorp)$dualstill[1:11])
+names(Sens_1)<-c("Price","low","High")
+Sens_1
+```
+```{r}
+Sens_2<-data.frame(get.sensitivity.rhs(Wcorp)$duals[12:20],get.sensitivity.rhs(Wcorp)$dualsfrom[12:20],get.sensitivity.rhs(Wcorp)$dualstill[12:20])
+names(Sens_2)<-c("Cost","low","High")
+Sens_2
+```
+
+#Dual Problem
+Creating an lp with zero constraints and 11 variables
+```{r}
+Wcorp1<-make.lp(0,11)
+```
+Creating objective function and setting it to minimization problem
+```{r}
+set.objfn(Wcorp1,c(750,900,450,13000,12000,5000,900,1200,750,0,0))
+lp.control(Wcorp1,sense='min')
+```
+Creating Constraints
+```{r}
+add.constraint(Wcorp1,c(1,20,1,900,450),">=",420,indices = c(1,4,9,10,11))
+add.constraint(Wcorp1,c(1,15,1,900,450),">=",360,indices = c(1,4,8,10,11))
+add.constraint(Wcorp1,c(1,12,1,900,450),">=",300,indices = c(1,4,7,10,11))
+add.constraint(Wcorp1,c(1,20,1,-750),">=",420,indices = c(2,5,9,10))
+add.constraint(Wcorp1,c(1,15,1,-750),">=",360,indices = c(2,5,8,10))
+add.constraint(Wcorp1,c(1,12,1,-750),">=",300,indices = c(2,5,7,10))
+add.constraint(Wcorp1,c(1,20,1,-750),">=",420,indices = c(3,6,9,11))
+add.constraint(Wcorp1,c(1,15,1,-750),">=",360,indices = c(3,6,8,11))
+add.constraint(Wcorp1,c(1,12,1,-750),">=",300,indices = c(3,6,7,11))
+set.bounds(Wcorp1,lower = c(-Inf,-Inf),columns = 10:11)
+```
+```{r}
+solve(Wcorp1)
+```
+
+```{r}
+get.objective(Wcorp1)
+```
+```{r}
+get.constraints(Wcorp1)
+```
+
+```{r}
+get.variables(Wcorp1)
+```
+
+```{r}
+get.sensitivity.obj(Wcorp1)
+```
+
+```{r}
+get.sensitivity.rhs(Wcorp1)
+```
+The solution agrees with what we have observed in the primal problem
+
+
+```
+

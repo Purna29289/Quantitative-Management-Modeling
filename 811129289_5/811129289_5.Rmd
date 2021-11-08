@@ -1,0 +1,249 @@
+---
+title: "811129289_5"
+author: "Purna Sai Kiran, G"
+date: "11/8/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Loading required libraries
+```{r}
+library(lpSolveAPI)
+library(Benchmarking)
+library(ucminf)
+```
+Question 1:
+DMU1
+Formulating a linear model and setting the objective function. This is a maximization problem
+```{r}
+LP_1<-make.lp(0,4)
+lp.control(LP_1,sense="max")
+set.objfn(LP_1,c(0,0,14000,3500))
+```
+
+Setting constraints
+```{r}
+add.constraint(LP_1,c(-150,-0.2,14000,3500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_1,c(-400,-0.7,14000,21000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_1,c(-320,-1.2,42000,10500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_1,c(-520,-2.0,28000,42000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_1,c(-350,-1.2,19000,25000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_1,c(-320,-0.7,14000,15000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_1,c(150,0.2),"=",1,indices = c(1,2))
+
+```
+
+Solving the LP problem
+```{r}
+solve(LP_1)
+get.objective(LP_1) 
+get.variables(LP_1)
+```
+The objective value is 1 where we will get maximum efficiency.
+
+DMU2
+Formulating an LP and setting the function to maximization
+```{r}
+LP_2<-make.lp(0,4)
+lp.control(LP_2,sense="max")
+set.objfn(LP_2,c(0,0,14000,21000))
+```
+
+Loading the constraints
+```{r}
+add.constraint(LP_2,c(-400,-0.7,14000,21000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_2,c(-150,-0.2,14000,3500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_2,c(-320,-1.2,42000,10500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_2,c(-520,-2.0,28000,42000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_2,c(-350,-1.2,19000,25000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_2,c(-320,-0.7,14000,15000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_2,c(400,0.7),"=",1,indices = c(1,2))
+```
+
+Solving the LP
+```{r}
+solve(LP_2)
+get.objective(LP_2)
+get.variables(LP_2)
+```
+For DMU 2 also, the maximum efficiency is attained at objective value 1
+
+
+DMU 3
+Formulating an LP and setting the function to maximization
+```{r}
+LP_3<-make.lp(0,4)
+lp.control(LP_3,sense="max")
+set.objfn(LP_3,c(0,0,42000,10500))
+```
+Adding constraints
+```{r}
+add.constraint(LP_3,c(-400,-0.7,14000,21000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_3,c(-150,-0.2,14000,3500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_3,c(-320,-1.2,42000,10500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_3,c(-520,-2.0,28000,42000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_3,c(-350,-1.2,19000,25000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_3,c(-320,-0.7,14000,15000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_3,c(320,1.2),"=",1,indices = c(1,2))
+```
+Solving the LP
+```{r}
+solve(LP_3)
+get.objective(LP_3)
+get.variables(LP_3)
+```
+The maximum efficiency is at objective value 1. Inputs are 0.0017 and 0.373 where output is 0.00238 and 0
+
+DMU 4
+Formulating the LP with maximization problem
+```{r}
+LP_4<-make.lp(0,4)
+lp.control(LP_4,sense="max")
+set.objfn(LP_4,c(0,0,28000,42000))
+```
+Adding constraints
+```{r}
+add.constraint(LP_4,c(-400,-0.7,14000,21000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_4,c(-150,-0.2,14000,3500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_4,c(-320,-1.2,42000,10500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_4,c(-520,-2.0,28000,42000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_4,c(-350,-1.2,19000,25000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_4,c(-320,-0.7,14000,15000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_4,c(520,2.0),"=",1,indices = c(1,2))
+```
+Solving the LP
+```{r}
+solve(LP_4)
+get.objective(LP_4)
+get.variables(LP_4)
+```
+Maximum efficiency is at 1 where the outputs are 0 and 0.0000238 and inputs are 0.000688 and 0.321
+
+
+DMU 5
+Formulating the lp with maximization problem
+```{r}
+LP_5<-make.lp(0,4)
+lp.control(LP_5,sense="max")
+set.objfn(LP_5,c(0,0,19000,25000))
+```
+Adding constraints
+```{r}
+add.constraint(LP_5,c(-400,-0.7,14000,21000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_5,c(-150,-0.2,14000,3500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_5,c(-320,-1.2,42000,10500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_5,c(-520,-2.0,28000,42000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_5,c(-350,-1.2,19000,25000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_5,c(-320,-0.7,14000,15000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_5,c(350,1.2),"=",1,indices = c(1,2))
+```
+Solving the LP problem
+```{r}
+solve(LP_5)
+get.objective(LP_5)
+get.variables(LP_5)
+```
+Maximum efficiency is at 1 when the input weights are 0.001 and 0.5 and output weights are 0.00, 0.00
+
+DMU 6
+Formulating the LP problem with maximization function
+```{r}
+LP_6<-make.lp(0,4)
+lp.control(LP_6,sense="max")
+set.objfn(LP_6,c(0,0,14000,15000))
+```
+Adding the constraints
+```{r}
+add.constraint(LP_6,c(-400,-0.7,14000,21000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_6,c(-150,-0.2,14000,3500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_6,c(-320,-1.2,42000,10500),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_6,c(-520,-2.0,28000,42000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_6,c(-350,-1.2,19000,25000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_6,c(-320,-0.7,14000,15000),"<=",0,indices = c(1,2,3,4))
+add.constraint(LP_6,c(320,0.7),"=",1,indices = c(1,2))
+```
+Solving the LP
+```{r}
+solve(LP_6)
+get.objective(LP_6)
+get.variables(LP_6)
+```
+The effieincy is found at objective value 0.8 where the inpu weights are 0.0015 and 0.721 and outputs weights are set to 0.000016 and 0.000042
+
+DAE Analysis
+```{r}
+X<-matrix(c(150,400,320,520,350,320,0.2,0.7,1.2,2.0,1.2,0.7),ncol=2)
+Y<-matrix(c(14000,14000,42000,28000,19000,14000,3500,21000,10500,42000,25000,15000),ncol=2)
+colnames(X)<-c("Staff","Supplies")
+colnames(Y)<-c("Reimbursed_Patients","Paid_Patients")
+rownames(X)<-paste0(rep("Facility",6),seq(1,6,1))
+rownames(Y)<-paste0(rep("Facility",6),seq(1,6,1))
+A <-dea(X,Y,RTS = "crs")
+A
+B <-dea(X,Y,RTS = "fdh")
+B
+C <-dea(X,Y,RTS = "vrs")
+C
+D <-dea(X,Y,RTS = "irs")
+D
+E <-dea(X,Y,RTS = "drs")
+E
+F <-dea(X,Y,RTS = "add")
+F
+G <-dea(X,Y,RTS = "irs2")
+G
+H <-dea(X,Y,RTS = "fdh+")
+H
+I <-dea(X,Y,RTS = "vrs+")
+I
+```
+
+Question 2:
+Peers and Lambda Values
+```{r}
+peers(A)
+lambda(A)
+peers(B)
+lambda(B)
+peers(C)
+lambda(C)
+peers(D)
+lambda(D)
+peers(E)
+lambda(E)
+peers(F)
+lambda(F)
+peers(G)
+lambda(G)
+peers(H)
+lambda(H)
+peers(I)
+lambda(I)
+```
+Question 3:
+
+```{r}
+M <- cbind(A$eff, B$eff, C$eff, D$eff, E$eff, F$eff)
+colnames(M) <- c('CRS Efficiency','FDH Efficiency','VRS Efficiency',
+'IRS Efficiency', 'DRS Efficiency', 'FRH Efficiency')
+M
+```
+
+
+
+Question 4:
+
+```{r}
+N<-cbind(A$eff,B$eff,C$eff,D$eff,E$eff,F$eff,G$eff,H$eff,I$eff)
+colnames(N)<-c(paste0(rep("Q",9),seq(1,7,1)))
+N
+```
+We can see that all facilities are efficient but facility 5 and 6 are inefficient
+Facility 5 is efficiency for FDH, VRS, IRS and FRH and for CRS and DRS assumptions it is 97% efficient
+Facility 6 is fully efficient for FDH and FRS assumptions. For CRS and DRS it is 86.7% efficient and for IRS and VRS it is 89.6% efficient 
+
+

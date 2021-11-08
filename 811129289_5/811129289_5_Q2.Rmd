@@ -1,0 +1,91 @@
+---
+title: "811129289_5_Q2"
+author: "Purna Sai Kiran, G"
+date: "11/8/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Question 1:
+
+Max Z = P - 6E - 3Y
+P = total profit over the entire new product life which is discounted,
+E = change in employment level in both directions,
+Y = reduction in next year’s earnings with respect to current year’s level.
+
+
+P is formulated as:
+P = 20X1 +15X2 + 25X3
+
+Level of employment is formulated as :
+6X1 + 4X2 + 5X3 = 50
+
+
+Next year Earnings goal is formulated as:
+8X1 + 7X2 + 5X3 >=75
+
+
+1) LP Formulation:
+
+Let us consider
+A1 - Level of employment - Target
+A2 - Earnings in the next year - Target
+B1 - Penalty if level of employment goal exceeds 50
+B2 - Penalty if level of employment goal decreases below 50
+C1 - Exceed the next year earnings
+C2 - Penalty if the next year's goals are not reached
+
+A1 = 6X1 + 4X2 + 5X3 - 50
+A2 = 8X1 + 7X2 + 5X3 - 75
+
+For Employment level goal
+A1 = B1 - B2  where B1, B2 >= 0
+B1 - B2 = 6X1 + 4X2 + 5X3 - 50
+
+For Next year earnings goal
+A2 = C1 - C2 where C1, C2 >= 0
+C1 - C2 = 8X1 + 7X2 + 5X3 - 75
+
+Final Formulation is expressed as
+Max P = 20X1 +15X2 + 25X3
+6X1 + 4X2 + 5X3 - (B1 - B2) = 50
+8X1 + 7X2 + 5X3 - (C1 - C2) = 75
+
+Xi >=0, where i=1,2,3
+Yi >=0, where Y = B, C and i= 1,2
+Yi >=0, where Y = B, C and i= 1,2
+
+Question 2:
+
+Maximize Z = P - 6E - 3Y
+
+Max Z = 20X1 +15X2 + 25X3 - 6B1 - 6B2 - 3C2
+
+Subject to:
+
+6X1 + 4X2 + 5X3 - B1 + B2 = 50
+8X1 + 7X2 + 5X3 - C1 + C2 = 75
+
+Xi >=0, where i=1,2,3
+Yi >=0, where Y = B, C and i= 1,2
+Yi >=0, where Y = B, C and i= 1,2
+
+
+Question 3:
+```{r}
+library(lpSolveAPI)
+LP_1 <- read.lp("Emax.lp")
+solve(LP_1)
+get.objective(LP_1)
+get.constraints(LP_1)
+get.variables(LP_1)
+
+```
+We can see that the penalty is 225 if the goal is not achieved
+X3 is 15 and B1 is 25, rest of the variables are all zeroes.
+Employment level is exceeded by 25. Profits reduced by 15 as a result
+

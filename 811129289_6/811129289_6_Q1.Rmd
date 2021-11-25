@@ -1,0 +1,52 @@
+---
+title: "Assignment_6_1"
+author: "Purna Sai Kiran, G"
+date: "11/21/2021"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Formulating an LP function. We set the function to maximization because we are trying to find the longest route.
+```{r}
+library(lpSolveAPI)
+lproute <- make.lp(0,12)
+lp.control(lproute, sense="max")
+```
+Setting the objective function
+```{r}
+t_value <- c(5, 3, 4, 2, 3, 1, 4, 6, 2, 5, 4, 7) 
+set.objfn(lproute, 1*t_value)
+set.type(lproute, 1:12, "binary") 
+```
+Setting the constraints
+```{r}
+add.constraint(lproute,c(1,1),"=",1,indices = c(1,2)) 
+add.constraint(lproute,c(1,-1,-1),"=",0,indices = c(1,3,4)) 
+add.constraint(lproute,c(1,-1),"=",0,indices = c(2,5))
+add.constraint(lproute,c(1,-1,-1),"=",0,indices = c(3,6,7))
+add.constraint(lproute,c(1,1,-1,-1),"=",0,indices = c(4,5,8,9))
+add.constraint(lproute,c(1, -1),"=",0,indices = c(6,10))
+add.constraint(lproute,c(1,1,-1),"=",0,indices = c(7,8,11))
+add.constraint(lproute,c(1,-1),"=",0,indices = c(9,12))
+add.constraint(lproute,c(1,1,1),"=",1,indices = c(10,11,12))
+```
+
+Solving the LP Problem
+```{r}
+solve(lproute)
+get.objective(lproute)
+get.variables(lproute)
+get.constraints(lproute)
+```
+Mapping input to the output
+```{r}
+arc <- c("X12", "X13", "X24", "X25", "X35", "X46", "X47", "X57", "X58", "X69", "X79", "X89")
+vars<-get.variables(lproute)
+output<-data.frame(arc,vars)
+output
+```
+Formulate and solve the binary integer programming (BIP) model for this problem using
+library lpsolve or equivalent in R.
+From the variables, the longest route will be X12 - X24 - X57 - X79. The maximum objective function is 17

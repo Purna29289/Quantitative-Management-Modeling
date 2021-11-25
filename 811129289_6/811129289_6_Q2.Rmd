@@ -1,0 +1,115 @@
+---
+title: "Assignment_6"
+author: "Purna Sai Kiran, G"
+date: "11/21/2021"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Q1. 
+
+formulating the lp function. Setting the function to maximization
+```{r}
+library(lpSolveAPI)
+lpstock<-make.lp(0,8)
+lp.control(lpstock,sense="max")
+```
+
+Since we are trying a interger programming we will set the type to integer. 
+```{r}
+set.objfn(lpstock,c(4,6.5,5.9,5.4,5.15,10,8.4,6.25))
+set.type(lpstock,c(1:8),type = "integer")
+```
+
+Adding the constraints
+```{r}
+add.constraint(lpstock,c(40,50,80,60,45,60,30,25),"<=",2500000,indices = c(1:8))
+add.constraint(lpstock,1000,">=",0,indices = 1)
+add.constraint(lpstock,1000,">=",0,indices = 2)
+add.constraint(lpstock,1000,">=",0,indices = 3)
+add.constraint(lpstock,1000,">=",0,indices = 4)
+add.constraint(lpstock,1000,">=",0,indices = 5)
+add.constraint(lpstock,1000,">=",0,indices = 6)
+add.constraint(lpstock,1000,">=",0,indices = 7)
+add.constraint(lpstock,1000,">=",0,indices = 8)
+add.constraint(lpstock,40,">=",100000,indices = 1)
+add.constraint(lpstock,50,">=",100000,indices = 2)
+add.constraint(lpstock,80,">=",100000,indices = 3)
+add.constraint(lpstock,60,">=",100000,indices = 4)
+add.constraint(lpstock,45,">=",100000,indices = 5)
+add.constraint(lpstock,60,">=",100000,indices = 6)
+add.constraint(lpstock,30,">=",100000,indices = 7)
+add.constraint(lpstock,25,">=",100000,indices = 8)
+add.constraint(lpstock,c(40,50,80),"<=",1000000,indices = c(1,2,3))
+add.constraint(lpstock,c(60,45,60),"<=",1000000,indices = c(4,5,6))
+add.constraint(lpstock,c(30,25),"<=",1000000,indices = c(7,8))
+```
+
+solving the lp problem
+```{r}
+solve(lpstock)
+get.objective(lpstock)
+get.variables(lpstock)
+get.constraints(lpstock)
+```
+1) Determine the maximum return on the portfolio. What is the optimal number of shares to
+buy for each of the stocks? What is the corresponding dollar amount invested in each
+stock?
+With integer restiction, the maximum return on investment is 487145.2.
+The optimal number of shares to buy are S1 = 2500, S2 = 6000, S3 = 1250, H1 = 1667, H2 = 2223, H3 = 13332, C1 = 30000 and C2 = 4000 and the corresponding dollars to be invested are S1 = 100000, S2 = 300000, S3 = 100000, H1 = 100020, H2 = 100035, H3 = 799920, C1 = 900000, C2 = 100000
+
+formulating lp problem without integer restrictions
+```{r}
+lpstock2 <-make.lp(0,8)
+lp.control(lpstock2,sense="max")
+```
+
+```{r}
+set.objfn(lpstock2,c(4,6.5,5.9,5.4,5.15,10,8.4,6.25))
+```
+
+```{r}
+add.constraint(lpstock2,c(40,50,80,60,45,60,30,25),"<=",2500000,indices = c(1:8))
+add.constraint(lpstock2,1000,">=",0,indices = 1)
+add.constraint(lpstock2,1000,">=",0,indices = 2)
+add.constraint(lpstock2,1000,">=",0,indices = 3)
+add.constraint(lpstock2,1000,">=",0,indices = 4)
+add.constraint(lpstock2,1000,">=",0,indices = 5)
+add.constraint(lpstock2,1000,">=",0,indices = 6)
+add.constraint(lpstock2,1000,">=",0,indices = 7)
+add.constraint(lpstock2,1000,">=",0,indices = 8)
+add.constraint(lpstock2,40,">=",100000,indices = 1)
+add.constraint(lpstock2,50,">=",100000,indices = 2)
+add.constraint(lpstock2,80,">=",100000,indices = 3)
+add.constraint(lpstock2,60,">=",100000,indices = 4)
+add.constraint(lpstock2,45,">=",100000,indices = 5)
+add.constraint(lpstock2,60,">=",100000,indices = 6)
+add.constraint(lpstock2,30,">=",100000,indices = 7)
+add.constraint(lpstock2,25,">=",100000,indices = 8)
+add.constraint(lpstock2,c(40,50,80),"<=",1000000,indices = c(1,2,3))
+add.constraint(lpstock2,c(60,45,60),"<=",1000000,indices = c(4,5,6))
+add.constraint(lpstock2,c(30,25),"<=",1000000,indices = c(7,8))
+```
+
+
+```{r}
+solve(lpstock2)
+get.objective(lpstock2)
+get.variables(lpstock2)
+get.constraints(lpstock2)
+```
+2) Compare the solution in which there is no integer restriction on the number of shares
+invested. By how much (in percentage terms) do the integer restrictions alter the value of
+the optimal objective function? By how much (in percentage terms) do they alter the
+optimal investment quantities?
+
+The return on investment is 487152.8
+The number of stocks to buy are S1 = 2500,S2 = 6000,S3= 1250,H1 = 1666.667,H2= 2222.22,H3= 13333.3,C1=30000,C2=4000
+The amounts to be invested are 100000, 300000, 100000, 100000, 100000, 800000, 900000, 100000 respectively.
+
+There is a difference of $7.6 between the lp problems with and without integer restrictions.
+The value of the objective function differs by 0.00156%
+The investment quantities are altered as follows:
+S1 = 0%, S2 = 0%, S3 = 0%, H1 = 0.03996% increased, H2 = 0.03501% decreased, H3 = 75. 01% increased and C1 = C2 = 0%
